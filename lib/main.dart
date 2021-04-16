@@ -1,19 +1,45 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return MaterialApp(
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: MyHomePage(title: 'error'),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MaterialApp(
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: MyHomePage(title: 'Flutter Demo Home Page'),
+            );
+          }
+          return MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: MyHomePage(title: 'loading'),
+          );
+        });
   }
 }
 
@@ -27,13 +53,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _Counter = 0;
+  int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
-      if (_Counter > 0) {
-        _Counter++;
-      }
+      _counter++;
     });
   }
 
@@ -51,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_Counter',
+              '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
