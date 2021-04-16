@@ -1,52 +1,66 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todos/bloc/authentication/authentication_bloc.dart';
+import 'package:todos/bloc/login/login_bloc.dart';
+import 'package:todos/pages/index.dart';
+import 'package:todos/services/service_locater.dart';
 
-void main() {
+import 'pages/index.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  await Firebase.initializeApp();
+  setupServiceLocater();
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider<AuthenticationBloc>(
+      create: (context) => AuthenticationBloc()..add(AppStarted()),
+    ),
+    BlocProvider<LoginBloc>(
+      create: (context) => LoginBloc(),
+    ),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  NavigatorState get _navigator => _navigatorKey.currentState!;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _initialization,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return MaterialApp(
-              title: 'Flutter Demo',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-              ),
-              home: MyHomePage(title: 'error'),
-            );
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            return MaterialApp(
-              title: 'Flutter Demo',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-              ),
-              home: MyHomePage(title: 'Flutter Demo Home Page'),
-            );
-          }
-          return MaterialApp(
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            home: MyHomePage(title: 'loading'),
-          );
-        });
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      builder: (context, child) {
+        return BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            if (state is AuthenticationAuthenticated) {
+              _navigator.pushAndRemoveUntil<void>(
+                MyHomePage.route(),
+                (route) => false,
+              );
+            } else {
+              _navigator.pushAndRemoveUntil<void>(
+                LoginPage.route(),
+                (route) => false,
+              );
+            }
+          },
+          child: child,
+        );
+      },
+      onGenerateRoute: (_) => SplashPage.route(),
+    );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => MyHomePage());
+  }
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -65,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title ?? 'Home!'),
       ),
       body: Center(
         child: Column(

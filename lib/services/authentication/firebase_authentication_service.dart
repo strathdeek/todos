@@ -22,8 +22,12 @@ class FirebaseAuthenticationService extends AuthenticationService {
   }
 
   @override
-  Future<String> getToken() {
-    return FirebaseAuth.instance.currentUser.getIdToken();
+  Future<String> getToken() async {
+    var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (token == null) {
+      throw AuthenticationException('User authentication expired');
+    }
+    return token;
   }
 
   @override
