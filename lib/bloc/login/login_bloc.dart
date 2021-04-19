@@ -27,6 +27,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } on AuthenticationException catch (e) {
         yield LoginFail(e.message);
       }
+    } else if (event is RegisterButtonPressed) {
+      try {
+        await authenticationService.createAccount(event.email, event.password);
+      } on AuthenticationException catch (e) {
+        yield LoginFail(e.message);
+      }
     }
   }
 }

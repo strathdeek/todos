@@ -17,6 +17,13 @@ class AuthenticationAuthenticated extends AuthenticationState {
   List<Object> get props => [token];
 }
 
-class AuthenticationUnauthenticated extends AuthenticationState {}
+class AuthenticationUnauthenticated extends AuthenticationState {
+  final String error;
+
+  AuthenticationUnauthenticated(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
 
 class AuthenticationLoading extends AuthenticationState {}

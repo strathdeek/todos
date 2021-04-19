@@ -14,6 +14,16 @@ class AppStarted extends AuthenticationEvent {
   }
 }
 
+class AuthenticationStatusChanged extends AuthenticationEvent {
+  final AuthenticationStatus status;
+  AuthenticationStatusChanged(this.status);
+  @override
+  String toString() => 'AuthenticationStatusChanged';
+
+  @override
+  List<Object> get props => [status];
+}
+
 class LoggedIn extends AuthenticationEvent {
   @override
   String toString() => 'LoggedIn';
