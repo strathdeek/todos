@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => LoginPage());
-  }
-
   void _navigateToRegistration(BuildContext context) {
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/register', (route) => false);

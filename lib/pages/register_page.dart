@@ -133,7 +133,39 @@ class RegisterPage extends StatelessWidget {
                         onPressed: () => context
                             .read<RegisterBloc>()
                             .add(RegisterSubmitted()),
-                        child: Text('Create Account'))
+                        child: Text('Create Account')),
+                    Container(
+                      child: Row(children: <Widget>[
+                        Expanded(
+                          child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 10.0, right: 15.0),
+                              child: Divider(
+                                color: Colors.grey.shade500,
+                                height: 30,
+                              )),
+                        ),
+                        Text(
+                          'or',
+                          style: TextStyle(
+                              color: Colors.grey.shade500, fontSize: 15),
+                        ),
+                        Expanded(
+                          child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 15.0, right: 10.0),
+                              child: Divider(
+                                color: Colors.grey.shade500,
+                                height: 30,
+                              )),
+                        ),
+                      ]),
+                    ),
+                    OutlinedButton(
+                        onPressed: () => Navigator.of(context)
+                            .pushNamedAndRemoveUntil(
+                                '/login', (route) => false),
+                        child: Text('Log in')),
                   ],
                 ),
               ),
