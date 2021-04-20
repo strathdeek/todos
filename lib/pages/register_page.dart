@@ -114,6 +114,7 @@ class RegisterPage extends StatelessWidget {
                                 RegisterConfirmPasswordChanged(
                                     confirmPassword: value));
                           },
+                          obscureText: true,
                           decoration: InputDecoration(
                             errorText: state.confirmPasswordError,
                             prefixIcon: Icon(Icons.lock),

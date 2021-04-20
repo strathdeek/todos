@@ -50,17 +50,29 @@ class LoginPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     BlocBuilder<LoginBloc, LoginState>(
+                        builder: (context, state) {
+                      return Text(
+                        state.apiError,
+                        style: TextStyle(color: Colors.red),
+                      );
+                    }),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    BlocBuilder<LoginBloc, LoginState>(
                       builder: (context, state) {
                         return TextField(
                           keyboardType: TextInputType.emailAddress,
                           autocorrect: false,
                           onChanged: (value) {
-                            //todo
+                            context
+                                .read<LoginBloc>()
+                                .add(LoginEmailChanged(email: value));
                           },
                           style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             hintText: 'Email',
-                            errorText: 'state.emailError', //todo
+                            errorText: state.emailError,
                             prefixIcon: Icon(
                               Icons.email,
                             ),
@@ -83,10 +95,12 @@ class LoginPage extends StatelessWidget {
                           obscureText: true,
                           style: TextStyle(color: Colors.black),
                           onChanged: (value) {
-                            //todo
+                            context
+                                .read<LoginBloc>()
+                                .add(LoginPasswordChanged(password: value));
                           },
                           decoration: InputDecoration(
-                            errorText: 'state.passwordError', //todo
+                            errorText: state.passwordError,
                             hintText: 'Password',
                             prefixIcon: Icon(Icons.lock),
                             errorBorder: UnderlineInputBorder(
@@ -105,7 +119,7 @@ class LoginPage extends StatelessWidget {
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: primaryColor),
                         onPressed: () {
-                          //todo
+                          context.read<LoginBloc>().add(LoginSubmitted());
                         },
                         child: Text('Log in')),
                     Container(

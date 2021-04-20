@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
-import 'package:todos/data/bloc/login/login_bloc.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/widgets/avatar.dart';
 import 'package:todos/widgets/widgets.dart';

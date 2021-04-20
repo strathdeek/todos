@@ -7,30 +7,24 @@ abstract class LoginEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoginButtonPressed extends LoginEvent {
-  final String email;
-  final String password;
-
-  LoginButtonPressed(this.email, this.password);
+class LoginSubmitted extends LoginEvent {
+  LoginSubmitted();
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [];
 
   @override
-  String toString() =>
-      'LoginEvent: LoginButtonPressed: {email: $email, password: $password';
+  String toString() => 'LoginEvent: LoginButtonPressed';
 }
 
-class RegisterButtonPressed extends LoginEvent {
+class LoginEmailChanged extends LoginEvent {
   final String email;
+
+  LoginEmailChanged({required this.email});
+}
+
+class LoginPasswordChanged extends LoginEvent {
   final String password;
 
-  RegisterButtonPressed(this.email, this.password);
-
-  @override
-  List<Object> get props => [email, password];
-
-  @override
-  String toString() =>
-      'LoginEvent: RegisterButtonPressed: {email: $email, password: $password';
+  LoginPasswordChanged({required this.password});
 }
