@@ -8,6 +8,8 @@ final getIt = GetIt.instance;
 
 void setupServiceLocater() {
   getIt.registerSingleton<AuthenticationService>(
-      FirebaseAuthenticationService());
+    FirebaseAuthenticationService(),
+    dispose: (service) => service.dispose(),
+  );
   getIt.registerSingleton<UserRepository>(HiveUserRepository());
 }

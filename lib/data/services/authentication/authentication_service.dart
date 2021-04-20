@@ -10,4 +10,5 @@ abstract class AuthenticationService {
   Future<void> logout();
   String getUserId();
   String getUserEmail();
+  void dispose();
 }

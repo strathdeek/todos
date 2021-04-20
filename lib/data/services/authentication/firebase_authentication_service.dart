@@ -84,4 +84,10 @@ class FirebaseAuthenticationService extends AuthenticationService {
   String getUserEmail() {
     return FirebaseAuth.instance.currentUser?.email ?? '';
   }
+
+  @override
+  void dispose() {
+    authSubscription.cancel();
+    tokenSubscription.cancel();
+  }
 }
