@@ -1,0 +1,1 @@
+const HiveUserBoxKey = 'user';

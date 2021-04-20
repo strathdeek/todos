@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todos/bloc/login/login_bloc.dart';
+import 'package:todos/data/bloc/login/login_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   static Route route() {

@@ -1,27 +1,36 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:todos/errors/authentication_error.dart';
-import 'package:todos/services/authentication/authentication_service.dart';
+import 'package:todos/data/exceptions/index.dart';
+
+import 'index.dart';
 
 class FirebaseAuthenticationService extends AuthenticationService {
-  final _controller = StreamController<AuthenticationStatus>()
+  final _authorizationController = StreamController<AuthenticationStatus>()
     ..add(AuthenticationStatus.unknown);
 
-  FirebaseAuthenticationService() {
-    initializeAuthenticationStatus();
-  }
+  late StreamSubscription authSubscription;
+  late StreamSubscription tokenSubscription;
 
-  Future<void> initializeAuthenticationStatus() async {
-    var status = (await isAuthenticated())
-        ? AuthenticationStatus.authenticated
-        : AuthenticationStatus.unauthenticated;
-    _controller.add(status);
+  String token = '';
+
+  FirebaseAuthenticationService() {
+    authSubscription = FirebaseAuth.instance.authStateChanges().listen((user) {
+      var status = (user != null)
+          ? AuthenticationStatus.authenticated
+          : AuthenticationStatus.unauthenticated;
+      _authorizationController.add(status);
+    });
+
+    tokenSubscription =
+        FirebaseAuth.instance.idTokenChanges().listen((newToken) async {
+      token = await newToken?.getIdToken() ?? '';
+    });
   }
 
   @override
   Stream<AuthenticationStatus> get status async* {
-    yield* _controller.stream;
+    yield* _authorizationController.stream;
   }
 
   @override
@@ -29,7 +38,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      _controller.add(AuthenticationStatus.authenticated);
+      _authorizationController.add(AuthenticationStatus.authenticated);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -43,22 +52,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
 
   @override
   Future<String> getToken() async {
-    try {
-      var token = await FirebaseAuth.instance.currentUser?.getIdToken();
-      return token ?? '';
-    } catch (_) {
-      throw AuthenticationException('User auth expired');
-    }
-  }
-
-  @override
-  Future<bool> isAuthenticated() async {
-    try {
-      var authenticated = FirebaseAuth.instance.currentUser != null;
-      return authenticated;
-    } on FirebaseAuthException catch (_) {
-      throw AuthenticationException('User auth expired');
-    }
+    return token;
   }
 
   @override
@@ -66,7 +60,7 @@ class FirebaseAuthenticationService extends AuthenticationService {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      _controller.add(AuthenticationStatus.authenticated);
+      _authorizationController.add(AuthenticationStatus.authenticated);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw AuthenticationException('No user found for that email.');
@@ -79,5 +73,15 @@ class FirebaseAuthenticationService extends AuthenticationService {
   @override
   Future<void> logout() {
     return FirebaseAuth.instance.signOut();
+  }
+
+  @override
+  String getUserId() {
+    return FirebaseAuth.instance.currentUser?.uid ?? '';
+  }
+
+  @override
+  String getUserEmail() {
+    return FirebaseAuth.instance.currentUser?.email ?? '';
   }
 }

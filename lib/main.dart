@@ -2,19 +2,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todos/bloc/authentication/authentication_bloc.dart';
-import 'package:todos/bloc/login/login_bloc.dart';
+import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
 import 'package:todos/pages/dashboard_page.dart';
 import 'package:todos/pages/index.dart';
-import 'package:todos/services/service_locater.dart';
+import 'package:todos/pages/routes/router.dart';
 
+import 'data/bloc/login/login_bloc.dart';
+import 'data/repositories/hive_setup.dart';
+import 'data/services/service_locater.dart';
 import 'pages/index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAuth.instance.useEmulator('http://localhost:9099');
+  await initializeHiveDatabase();
+
   setupServiceLocater();
+
   runApp(MultiBlocProvider(providers: [
     BlocProvider<AuthenticationBloc>(
       create: (context) => AuthenticationBloc()..add(AppStarted()),
@@ -36,19 +41,17 @@ class TodoApp extends StatelessWidget {
       theme: ThemeData(
           appBarTheme: AppBarTheme(
               backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent)),
+              shadowColor: Colors.transparent),
+          canvasColor: Color.fromARGB(255, 254, 215, 102)),
       navigatorKey: _navigatorKey,
       builder: (context, child) {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationAuthenticated) {
-              _navigator.pushAndRemoveUntil<void>(
-                DashboardPage.route(),
-                (route) => false,
-              );
+              _navigator.pushNamedAndRemoveUntil('/', (route) => false);
             } else if (state is AuthenticationUnauthenticated) {
-              _navigator.pushAndRemoveUntil<void>(
-                LoginPage.route(),
+              _navigator.pushNamedAndRemoveUntil<void>(
+                '/login',
                 (route) => false,
               );
             } else {
@@ -59,7 +62,7 @@ class TodoApp extends StatelessWidget {
           child: child,
         );
       },
-      onGenerateRoute: (_) => SplashPage.route(),
+      onGenerateRoute: onGenerateRoute,
     );
   }
 }
