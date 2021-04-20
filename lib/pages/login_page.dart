@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todos/pages/register_page.dart';
 
 class LoginPage extends StatelessWidget {
   static Route route() {
@@ -8,7 +7,7 @@ class LoginPage extends StatelessWidget {
 
   void _navigateToRegistration(BuildContext context) {
     Navigator.of(context)
-        .pushAndRemoveUntil(RegisterPage.route(), (route) => false);
+        .pushNamedAndRemoveUntil('/register', (route) => false);
   }
 
   @override

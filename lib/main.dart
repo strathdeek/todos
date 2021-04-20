@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
-import 'package:todos/pages/dashboard_page.dart';
+import 'package:todos/data/bloc/register/register_bloc.dart';
 import 'package:todos/pages/index.dart';
 import 'package:todos/pages/routes/router.dart';
 
@@ -27,6 +27,9 @@ void main() async {
     BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(),
     ),
+    BlocProvider(
+      create: (context) => RegisterBloc(),
+    )
   ], child: TodoApp()));
 }
 
@@ -39,10 +42,12 @@ class TodoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          appBarTheme: AppBarTheme(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent),
-          canvasColor: Color.fromARGB(255, 254, 215, 102)),
+        primaryColor: Color.fromARGB(255, 254, 203, 52),
+        textTheme: Typography.whiteCupertino,
+        appBarTheme: AppBarTheme(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent),
+      ),
       navigatorKey: _navigatorKey,
       builder: (context, child) {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -51,7 +56,7 @@ class TodoApp extends StatelessWidget {
               _navigator.pushNamedAndRemoveUntil('/', (route) => false);
             } else if (state is AuthenticationUnauthenticated) {
               _navigator.pushNamedAndRemoveUntil<void>(
-                '/login',
+                '/register',
                 (route) => false,
               );
             } else {

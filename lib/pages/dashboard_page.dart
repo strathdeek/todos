@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
+import 'package:todos/data/bloc/login/login_bloc.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/widgets/avatar.dart';
 import 'package:todos/widgets/widgets.dart';
@@ -82,7 +83,9 @@ class _DashboardPageState extends State<DashboardPage> {
                               Icons.menu,
                               color: Colors.white,
                             ),
-                            onPressed: () => print('tapped menu')),
+                            onPressed: () => context
+                                .read<AuthenticationBloc>()
+                                .add(LoggedOut())),
                         Text(
                           'TODO',
                           style: TextStyle(fontSize: 20, color: Colors.white),

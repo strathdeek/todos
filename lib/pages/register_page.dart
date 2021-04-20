@@ -1,102 +1,143 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todos/data/bloc/login/login_bloc.dart';
+import 'package:todos/data/bloc/register/register_bloc.dart';
+import 'package:todos/widgets/curve.dart';
 
-class RegisterPage extends StatefulWidget {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => RegisterPage());
-  }
-
-  const RegisterPage({Key? key}) : super(key: key);
-
-  @override
-  _RegisterPageState createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
-  String _email = '';
-  String _password = '';
-  String _confirmPassword = '';
-
-  String _emailError = '';
-  String _passwordError = '';
-  String _confirmPasswordError = '';
-
-  bool get _emailValid => RegExp(
-          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-      .hasMatch(_email);
-
-  bool _verifyEmailInput() {
-    setState(() {
-      _emailError = !_emailValid ? 'Please use a valid email address' : '';
-    });
-    return _emailValid;
-  }
-
-  bool _verifyPasswordInput() {
-    setState(() {
-      _passwordError = _password.isEmpty ? 'Password not long enough' : '';
-      _confirmPasswordError =
-          (_confirmPassword.isNotEmpty && _password != _confirmPassword)
-              ? 'Passwords do not match'
-              : '';
-    });
-
-    return _passwordError.isEmpty &&
-        _confirmPasswordError.isEmpty &&
-        _confirmPassword.isNotEmpty;
-  }
-
-  void _registerAccount() {
-    if (_verifyEmailInput() && _verifyPasswordInput()) {
-      BlocProvider.of<LoginBloc>(context)
-          .add(RegisterButtonPressed(_email, _password));
-    }
-  }
-
+class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       body: Container(
+        color: Colors.white,
         alignment: Alignment.center,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Email'),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  _email = value;
-                });
-              },
-              onEditingComplete: _verifyEmailInput,
-              decoration: InputDecoration(errorText: _emailError),
+            Expanded(
+              child: Stack(children: [
+                LayoutBuilder(
+                  builder: (context, constraints) => AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                    width: constraints.widthConstraints().maxWidth,
+                    height: constraints.heightConstraints().maxHeight,
+                    child: CustomPaint(
+                      painter: CurvePainter(color: primaryColor),
+                    ),
+                  ),
+                ),
+                AnimatedAlign(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 50),
+                      child: Text(
+                        'Create\nAccount',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(color: Colors.white),
+                      ),
+                    ))
+              ]),
             ),
-            SizedBox(height: 50),
-            Text('Password'),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  _password = value;
-                });
-              },
-              decoration: InputDecoration(errorText: _passwordError),
-              onEditingComplete: _verifyPasswordInput,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    BlocBuilder<RegisterBloc, RegisterState>(
+                      builder: (context, state) {
+                        return TextField(
+                          keyboardType: TextInputType.emailAddress,
+                          autocorrect: false,
+                          onChanged: (value) {
+                            context
+                                .read<RegisterBloc>()
+                                .add(RegisterEmailChanged(email: value));
+                          },
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            hintText: 'Email',
+                            errorText: state.emailError,
+                            prefixIcon: Icon(
+                              Icons.email,
+                            ),
+                            errorBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade400)),
+                            focusedErrorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: primaryColor)),
+                          ),
+                          cursorColor: primaryColor,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 25),
+                    BlocBuilder<RegisterBloc, RegisterState>(
+                      builder: (context, state) {
+                        return TextField(
+                          keyboardType: TextInputType.visiblePassword,
+                          autocorrect: false,
+                          obscureText: true,
+                          style: TextStyle(color: Colors.black),
+                          onChanged: (value) {
+                            context
+                                .read<RegisterBloc>()
+                                .add(RegisterPasswordChanged(password: value));
+                          },
+                          decoration: InputDecoration(
+                            errorText: state.passwordError,
+                            hintText: 'Password',
+                            prefixIcon: Icon(Icons.lock),
+                            errorBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade400)),
+                            focusedErrorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: primaryColor)),
+                          ),
+                          cursorColor: primaryColor,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 25),
+                    BlocBuilder<RegisterBloc, RegisterState>(
+                      builder: (context, state) {
+                        return TextField(
+                          style: TextStyle(color: Colors.black),
+                          autocorrect: false,
+                          onChanged: (value) {
+                            context.read<RegisterBloc>().add(
+                                RegisterConfirmPasswordChanged(
+                                    confirmPassword: value));
+                          },
+                          decoration: InputDecoration(
+                            errorText: state.confirmPasswordError,
+                            prefixIcon: Icon(Icons.lock),
+                            hintText: 'Confirm Password',
+                            errorBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade400)),
+                            focusedErrorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: primaryColor)),
+                          ),
+                          cursorColor: primaryColor,
+                        );
+                      },
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: primaryColor),
+                        onPressed: () => context
+                            .read<RegisterBloc>()
+                            .add(RegisterSubmitted()),
+                        child: Text('Create Account'))
+                  ],
+                ),
+              ),
             ),
-            SizedBox(height: 50),
-            Text('Confirm Password'),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  _confirmPassword = value;
-                });
-              },
-              onEditingComplete: _verifyPasswordInput,
-              decoration: InputDecoration(errorText: _confirmPasswordError),
-            ),
-            ElevatedButton(
-                onPressed: _registerAccount, child: Text('Create Account'))
           ],
         ),
       ),
