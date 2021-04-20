@@ -58,7 +58,7 @@ class TodoApp extends StatelessWidget {
               _navigator.pushNamedAndRemoveUntil('/', (route) => false);
             } else if (state is AuthenticationUnauthenticated) {
               _navigator.pushNamedAndRemoveUntil<void>(
-                '/register',
+                '/login',
                 (route) => false,
               );
             } else {

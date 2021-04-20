@@ -128,12 +128,15 @@ class RegisterPage extends StatelessWidget {
                         );
                       },
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: primaryColor),
                         onPressed: () => context
                             .read<RegisterBloc>()
                             .add(RegisterSubmitted()),
-                        child: Text('Create Account')),
+                        child: Text('Sign up')),
                     Container(
                       child: Row(children: <Widget>[
                         Expanded(
