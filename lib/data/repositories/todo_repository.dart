@@ -30,21 +30,21 @@ class TodoRepository {
         .toList();
   }
 
-  Future<void> addTodo(
+  Future<Todo> addTodo(
       {required String title,
       required DateTime dueDate,
       required Category category}) async {
     var todo =
         Todo(title: title, dueDate: dueDate, category: category, done: false);
     await _todoProvider.addTodo(todo);
+    return todo;
   }
 
   Future<void> deleteTodo(Todo todo) async {
     await _todoProvider.deleteTodo(todo);
   }
 
-  Future<void> markTodoAsDone(Todo todo) async {
-    todo.done = true;
+  Future<void> updateTodo(Todo todo) async {
     await _todoProvider.updateTodo(todo);
   }
 }

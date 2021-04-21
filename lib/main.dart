@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
 import 'package:todos/data/bloc/register/register_bloc.dart';
+import 'package:todos/data/providers/todo_provider.dart';
+import 'package:todos/data/repositories/todo_repository.dart';
 import 'package:todos/pages/index.dart';
 import 'package:todos/pages/routes/router.dart';
 
@@ -13,6 +15,9 @@ import 'data/services/service_locater.dart';
 import 'pages/index.dart';
 
 void main() async {
+  var _todoProvider = TodoProvider();
+  var _todoRepository = TodoRepository(_todoProvider);
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAuth.instance.useEmulator('http://localhost:9099');
