@@ -68,7 +68,7 @@ class RegisterPage extends StatelessWidget {
                             ),
                             errorBorder: UnderlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Colors.grey.shade400)),
+                                    BorderSide(color: Colors.grey.shade600)),
                             focusedErrorBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: primaryColor)),
                           ),
@@ -95,7 +95,7 @@ class RegisterPage extends StatelessWidget {
                             prefixIcon: Icon(Icons.lock),
                             errorBorder: UnderlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Colors.grey.shade400)),
+                                    BorderSide(color: Colors.grey.shade600)),
                             focusedErrorBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: primaryColor)),
                           ),
@@ -121,7 +121,7 @@ class RegisterPage extends StatelessWidget {
                             hintText: 'Confirm Password',
                             errorBorder: UnderlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Colors.grey.shade400)),
+                                    BorderSide(color: Colors.grey.shade600)),
                             focusedErrorBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: primaryColor)),
                           ),

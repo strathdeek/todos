@@ -5,11 +5,12 @@ import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
 import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
 import 'package:todos/data/constants/enums.dart';
+import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/widgets/avatar.dart';
-import 'package:todos/widgets/category_progress_indicatory.dart';
+import 'package:todos/widgets/category_icon.dart';
+import 'package:todos/widgets/category_sumary.dart';
 import 'package:todos/widgets/widgets.dart';
-import 'package:todos/utils/extensions.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -18,32 +19,6 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   int _index = 0;
-
-  Color _getColorForCategory(Category category) {
-    switch (category) {
-      case Category.personal:
-        return Color.fromARGB(255, 231, 130, 109);
-      case Category.work:
-        return Color.fromARGB(255, 99, 137, 223);
-      case Category.home:
-        return Color.fromARGB(255, 112, 194, 173);
-      default:
-        return Color.fromARGB(255, 231, 130, 109);
-    }
-  }
-
-  IconData _getIconDataForCategory(Category category) {
-    switch (category) {
-      case Category.personal:
-        return Icons.person;
-      case Category.work:
-        return Icons.work;
-      case Category.home:
-        return Icons.home;
-      default:
-        return Icons.person;
-    }
-  }
 
   final _sections = Category.values;
 
@@ -95,7 +70,7 @@ class _DashboardPageState extends State<DashboardPage> {
         return Scaffold(
           body: AnimatedContainer(
             duration: Duration(milliseconds: 300),
-            color: _getColorForCategory(_sections[_index]),
+            color: _sections[_index].getColor(),
             child: Padding(
               padding: const EdgeInsets.only(top: 35, bottom: 50),
               child: Column(
@@ -145,87 +120,45 @@ class _DashboardPageState extends State<DashboardPage> {
                     onPageChanged: (int index) =>
                         setState(() => _index = index),
                     itemBuilder: (_, i) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            top: 15, right: 15, bottom: 30),
-                        child: Card(
-                          elevation: 6,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                      return Container(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed('/detail', arguments: _sections[i]);
+                          },
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                            padding: const EdgeInsets.only(
+                                top: 15, right: 15, bottom: 30),
+                            child: Card(
+                              elevation: 6,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, bottom: 20, left: 20, right: 20),
+                                child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    RawMaterialButton(
-                                      onPressed: () => print('tapped more'),
-                                      elevation: 0,
-                                      fillColor: Colors.transparent,
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 15.0, horizontal: 5),
-                                      shape: CircleBorder(
-                                          side: BorderSide(
-                                              color: Colors.grey.shade300)),
-                                      child: Icon(
-                                        _getIconDataForCategory(_sections[i]),
-                                        color:
-                                            _getColorForCategory(_sections[i]),
-                                        size: 30,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CategoryIcon(category: _sections[i]),
+                                        IconButton(
+                                            icon: Icon(
+                                              Icons.more_vert,
+                                              color: Colors.grey.shade300,
+                                              size: 30,
+                                            ),
+                                            onPressed: () =>
+                                                print('tapped more'))
+                                      ],
                                     ),
-                                    IconButton(
-                                        icon: Icon(
-                                          Icons.more_vert,
-                                          color: Colors.grey.shade300,
-                                          size: 30,
-                                        ),
-                                        onPressed: () => print('tapped more'))
+                                    CategorySummary(category: _sections[i])
                                   ],
                                 ),
-                                BlocProvider(
-                                  create: (context) => FilteredTodoBloc(
-                                      todoBloc: context.read<TodoBloc>())
-                                    ..add(FilteredTodoFilterChanged(
-                                        TodoFilter.category)),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      BlocBuilder<FilteredTodoBloc,
-                                          FilteredTodoState>(
-                                        builder: (context, state) {
-                                          return Text(
-                                            '${state.todos.length} Tasks',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.grey.shade400),
-                                          );
-                                        },
-                                      ),
-                                      SizedBox(height: 10),
-                                      Text(_sections[i].getName().capitalize(),
-                                          style: TextStyle(
-                                              fontSize: 35,
-                                              color: Colors.grey.shade700)),
-                                      SizedBox(height: 15),
-                                      BlocBuilder<FilteredTodoBloc,
-                                          FilteredTodoState>(
-                                        builder: (context, state) {
-                                          return CategoryProgressIndicator(
-                                              color: _getColorForCategory(
-                                                  _sections[i]),
-                                              category: _sections[i],
-                                              totalTodos: state.todos.length);
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
+                              ),
                             ),
                           ),
                         ),

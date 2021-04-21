@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
 import 'package:todos/data/constants/enums.dart';
+import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/utils/extensions.dart';
 
@@ -60,7 +61,7 @@ class FilteredTodoBloc extends Bloc<FilteredTodoEvent, FilteredTodoState> {
       FilteredTodoFilterChanged event) async* {
     yield FilteredTodoLoadSuccess(
         _filterTodos(
-            todos: state.todos,
+            todos: todoBloc.state.todos,
             filter: event.filter,
             date: state.date,
             category: state.category),
@@ -73,7 +74,7 @@ class FilteredTodoBloc extends Bloc<FilteredTodoEvent, FilteredTodoState> {
       FilteredTodoDateChanged event) async* {
     yield FilteredTodoLoadSuccess(
         _filterTodos(
-            todos: state.todos,
+            todos: todoBloc.state.todos,
             filter: state.filter,
             date: event.date,
             category: state.category),
@@ -86,7 +87,7 @@ class FilteredTodoBloc extends Bloc<FilteredTodoEvent, FilteredTodoState> {
       FilteredTodoCategoryChanged event) async* {
     yield FilteredTodoLoadSuccess(
         _filterTodos(
-            todos: state.todos,
+            todos: todoBloc.state.todos,
             filter: state.filter,
             date: state.date,
             category: event.category),

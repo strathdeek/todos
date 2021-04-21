@@ -14,7 +14,7 @@ abstract class FilteredTodoState extends Equatable {
   });
 
   @override
-  List<Object> get props => [filter, date, todos];
+  List<Object> get props => [filter, date, todos, category];
 }
 
 class FilteredTodoLoadInProgress extends FilteredTodoState {

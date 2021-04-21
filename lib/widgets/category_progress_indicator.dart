@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
 import 'package:todos/data/constants/enums.dart';
+import 'package:todos/data/models/category.dart';
 
 class CategoryProgressIndicator extends StatelessWidget {
   final Color color;
@@ -24,10 +25,24 @@ class CategoryProgressIndicator extends StatelessWidget {
       child: Container(
         child: BlocBuilder<FilteredTodoBloc, FilteredTodoState>(
           builder: (context, state) {
-            return LinearProgressIndicator(
-              value: totalTodos > 0 ? state.todos.length / totalTodos : 0,
-              backgroundColor: Colors.grey.shade300,
-              valueColor: AlwaysStoppedAnimation<Color>(color),
+            var progress = totalTodos > 0 ? state.todos.length / totalTodos : 0;
+            return Row(
+              children: [
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: progress.toDouble(),
+                    backgroundColor: Colors.grey.shade300,
+                    valueColor: AlwaysStoppedAnimation<Color>(color),
+                  ),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  '${(progress * 100).toStringAsFixed(0)}%',
+                  style: TextStyle(color: Colors.grey.shade600),
+                )
+              ],
             );
           },
         ),

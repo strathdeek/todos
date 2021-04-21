@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
+import 'package:todos/data/bloc/bloc_observer.dart';
 import 'package:todos/data/bloc/register/register_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
 import 'package:todos/data/providers/todo_provider.dart';
@@ -20,7 +21,7 @@ void main() async {
   await Firebase.initializeApp();
   await FirebaseAuth.instance.useEmulator('http://localhost:9099');
   await initializeHiveDatabase();
-
+  Bloc.observer = SimpleBlocObserver();
   var _todoProvider = TodoProvider();
   var _todoRepository = TodoRepository(_todoProvider);
 
@@ -37,7 +38,8 @@ void main() async {
       create: (context) => RegisterBloc(),
     ),
     BlocProvider<TodoBloc>(
-        create: (context) => TodoBloc(todoRepository: _todoRepository)),
+        create: (context) => TodoBloc(todoRepository: _todoRepository)
+          ..add(TodoLoadedSuccess())),
   ], child: TodoApp()));
 }
 

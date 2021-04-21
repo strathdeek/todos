@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:todos/data/constants/enums.dart';
+import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/data/repositories/todo_repository.dart';
 

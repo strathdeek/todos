@@ -78,7 +78,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             errorBorder: UnderlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Colors.grey.shade400)),
+                                    BorderSide(color: Colors.grey.shade600)),
                             focusedErrorBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: primaryColor)),
                           ),
@@ -105,7 +105,7 @@ class LoginPage extends StatelessWidget {
                             prefixIcon: Icon(Icons.lock),
                             errorBorder: UnderlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Colors.grey.shade400)),
+                                    BorderSide(color: Colors.grey.shade600)),
                             focusedErrorBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: primaryColor)),
                           ),

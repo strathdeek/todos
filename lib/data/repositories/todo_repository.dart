@@ -1,4 +1,4 @@
-import 'package:todos/data/constants/enums.dart';
+import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/data/providers/todo_provider.dart';
 import 'package:todos/utils/extensions.dart';
