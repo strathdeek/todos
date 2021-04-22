@@ -6,15 +6,15 @@ import 'package:uuid/uuid.dart';
 part 'todo.g.dart';
 
 @HiveType(typeId: 2)
-class Todo extends HiveObject implements Equatable {
+class Todo extends Equatable {
   @HiveField(0)
-  String title;
+  final String title;
   @HiveField(1)
-  DateTime dueDate;
+  final DateTime dueDate;
   @HiveField(2)
-  Category category;
+  final Category category;
   @HiveField(3)
-  bool done;
+  final bool done;
   @HiveField(4)
   final String id;
 
@@ -22,12 +22,20 @@ class Todo extends HiveObject implements Equatable {
       {required this.title,
       required this.dueDate,
       required this.category,
-      required this.done})
-      : id = Uuid().v4();
+      required this.done,
+      String? id})
+      : id = id ?? Uuid().v4();
+
+  Todo copyWith(
+      {String? title, DateTime? dueDate, Category? category, bool? done}) {
+    return Todo(
+        title: title ?? this.title,
+        category: category ?? this.category,
+        dueDate: dueDate ?? this.dueDate,
+        id: id,
+        done: done ?? this.done);
+  }
 
   @override
-  List<Object?> get props => [title, dueDate, category, done];
-
-  @override
-  bool? get stringify => false;
+  List<Object?> get props => [title, dueDate, category, done, id];
 }

@@ -17,11 +17,11 @@ class TodoAdapter extends TypeAdapter<Todo> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Todo(
-      title: fields[0] as String,
-      dueDate: fields[1] as DateTime,
-      category: fields[2] as Category,
-      done: fields[3] as bool,
-    );
+        title: fields[0] as String,
+        dueDate: fields[1] as DateTime,
+        category: fields[2] as Category,
+        done: fields[3] as bool,
+        id: fields[4] as String);
   }
 
   @override

@@ -53,9 +53,9 @@ class TodoApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         outlinedButtonTheme: OutlinedButtonThemeData(
-            style: OutlinedButton.styleFrom(primary: Colors.grey.shade500)),
+            style: OutlinedButton.styleFrom(primary: Colors.grey.shade600)),
         primaryColor: Color.fromARGB(255, 254, 203, 52),
-        textTheme: Typography.whiteCupertino,
+        textTheme: Typography.blackCupertino,
         appBarTheme: AppBarTheme(
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent),

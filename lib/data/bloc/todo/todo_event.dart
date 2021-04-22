@@ -24,14 +24,18 @@ class TodoDeleted extends TodoEvent {
 
 class TodoUpdated extends TodoEvent {
   final Todo todo;
+  final String? title;
+  final DateTime? dueDate;
+  final bool? done;
+  final Category? category;
 
-  TodoUpdated(this.todo);
+  TodoUpdated(this.todo, {this.title, this.dueDate, this.done, this.category});
 }
 
 class TodoLoadedSuccess extends TodoEvent {}
 
-class TodoMarkedAsDone extends TodoEvent {
+class TodoDoneToggled extends TodoEvent {
   final Todo todo;
-
-  TodoMarkedAsDone(this.todo);
+  final bool done;
+  TodoDoneToggled(this.todo, this.done);
 }

@@ -6,6 +6,7 @@ import 'package:todos/data/bloc/todo/todo_bloc.dart';
 import 'package:todos/data/constants/enums.dart';
 import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
+import 'package:todos/data/models/todo_filter.dart';
 import 'package:todos/utils/extensions.dart';
 
 part 'filtered_todo_event.dart';
@@ -17,8 +18,13 @@ class FilteredTodoBloc extends Bloc<FilteredTodoEvent, FilteredTodoState> {
 
   FilteredTodoBloc({required this.todoBloc})
       : super(todoBloc.state is TodoLoadSuccess
-            ? FilteredTodoLoadSuccess(todoBloc.state.todos, TodoFilter.all,
-                DateTime.now(), Category.home)
+            ? FilteredTodoLoadSuccess(
+                todoBloc.state.todos,
+                TodoFilter(
+                    filterByDate: false,
+                    filterByCategory: false,
+                    filterByDone: false),
+              )
             : FilteredTodoLoadInProgress()) {
     todoSubscription = todoBloc.stream.listen(monitorTodoState);
   }
@@ -37,98 +43,36 @@ class FilteredTodoBloc extends Bloc<FilteredTodoEvent, FilteredTodoState> {
       yield* _mapFilteredTodoTodosChangedToState(event);
     } else if (event is FilteredTodoFilterChanged) {
       yield* _mapFilteredTodoFilterChangedToState(event);
-    } else if (event is FilteredTodoDateChanged) {
-      yield* _mapFilteredTodoDateChangedToState(event);
-    } else if (event is FilteredTodoCategoryChanged) {
-      yield* _mapFilteredTodoCategoryChangedToState(event);
     }
   }
 
   Stream<FilteredTodoState> _mapFilteredTodoTodosChangedToState(
       FilteredTodoTodosChanged event) async* {
     yield FilteredTodoLoadSuccess(
-        _filterTodos(
-            todos: event.todos,
-            filter: state.filter,
-            date: state.date,
-            category: state.category),
-        state.filter,
-        state.date,
-        state.category);
+      _filterTodos(
+        todos: event.todos,
+        filter: state.filter,
+      ),
+      state.filter,
+    );
   }
 
   Stream<FilteredTodoState> _mapFilteredTodoFilterChangedToState(
       FilteredTodoFilterChanged event) async* {
     yield FilteredTodoLoadSuccess(
-        _filterTodos(
-            todos: todoBloc.state.todos,
-            filter: event.filter,
-            date: state.date,
-            category: state.category),
-        event.filter,
-        state.date,
-        state.category);
+      _filterTodos(
+        todos: todoBloc.state.todos,
+        filter: event.filter,
+      ),
+      event.filter,
+    );
   }
 
-  Stream<FilteredTodoState> _mapFilteredTodoDateChangedToState(
-      FilteredTodoDateChanged event) async* {
-    yield FilteredTodoLoadSuccess(
-        _filterTodos(
-            todos: todoBloc.state.todos,
-            filter: state.filter,
-            date: event.date,
-            category: state.category),
-        state.filter,
-        event.date,
-        state.category);
-  }
-
-  Stream<FilteredTodoState> _mapFilteredTodoCategoryChangedToState(
-      FilteredTodoCategoryChanged event) async* {
-    yield FilteredTodoLoadSuccess(
-        _filterTodos(
-            todos: todoBloc.state.todos,
-            filter: state.filter,
-            date: state.date,
-            category: event.category),
-        state.filter,
-        state.date,
-        event.category);
-  }
-
-  List<Todo> _filterTodos(
-      {required List<Todo> todos,
-      required TodoFilter filter,
-      required DateTime date,
-      required Category category}) {
-    switch (filter) {
-      case TodoFilter.all:
-        return todos;
-      case TodoFilter.active:
-        return todos.where((element) => !element.done).toList();
-      case TodoFilter.completed:
-        return todos.where((element) => element.done).toList();
-      case TodoFilter.onDate:
-        return todos
-            .where((element) => element.dueDate.isSameDate(date))
-            .toList();
-      case TodoFilter.beforeDate:
-        return todos
-            .where((element) => element.dueDate.isBefore(date))
-            .toList();
-      case TodoFilter.afterDate:
-        return todos.where((element) => element.dueDate.isAfter(date)).toList();
-      case TodoFilter.category:
-        return todos.where((element) => element.category == category).toList();
-      case TodoFilter.completedCategory:
-        return todos
-            .where((element) => element.category == category)
-            .where((element) => element.done)
-            .toList();
-
-      default:
-        return todos;
-    }
+  List<Todo> _filterTodos({
+    required List<Todo> todos,
+    required TodoFilter filter,
+  }) {
+    return filter.filter(todos);
   }
 
   @override

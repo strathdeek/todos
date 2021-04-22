@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
 import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
-import 'package:todos/data/constants/enums.dart';
 import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
+import 'package:todos/data/models/todo_filter.dart';
 import 'package:todos/widgets/avatar.dart';
 import 'package:todos/widgets/category_icon.dart';
 import 'package:todos/widgets/category_sumary.dart';
@@ -44,7 +44,13 @@ class _DashboardPageState extends State<DashboardPage> {
           BlocProvider(
             create: (context) =>
                 FilteredTodoBloc(todoBloc: context.read<TodoBloc>())
-                  ..add(FilteredTodoFilterChanged(TodoFilter.all)),
+                  ..add(FilteredTodoFilterChanged(TodoFilter(
+                      filterByDate: true,
+                      filterByCategory: false,
+                      filterByDone: true,
+                      date: DateTime.now(),
+                      dateFilter: DateFilterType.onDate,
+                      done: false))),
             child: BlocBuilder<FilteredTodoBloc, FilteredTodoState>(
               builder: (context, state) {
                 return Text(

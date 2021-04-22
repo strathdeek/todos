@@ -6,15 +6,18 @@ class TodoProvider {
   final Box<Todo> _todoBox = Hive.box(HiveTodoBoxKey);
 
   Future<void> addTodo(Todo todo) async {
+    print('writing todo with key: ${todo.id}');
     await _todoBox.put(todo.id, todo);
   }
 
   Future<void> updateTodo(Todo todo) async {
-    await todo.save();
+    await _todoBox.put(todo.id, todo);
   }
 
   Future<void> deleteTodo(Todo todo) async {
-    await todo.delete();
+    print(
+        'deleting todo with key: ${todo.id} - key exists: ${_todoBox.containsKey(todo.id)}');
+    await _todoBox.delete(todo.id);
   }
 
   Future<List<Todo>> getTodos() async {

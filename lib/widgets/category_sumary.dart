@@ -4,6 +4,7 @@ import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
 import 'package:todos/data/constants/enums.dart';
 import 'package:todos/data/models/category.dart';
+import 'package:todos/data/models/todo_filter.dart';
 import 'package:todos/widgets/category_progress_indicator.dart';
 import 'package:todos/utils/extensions.dart';
 
@@ -13,13 +14,17 @@ class CategorySummary extends StatelessWidget {
   const CategorySummary({Key? key, required this.category}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    print('category summary loading: $category');
     return Container(
       child: BlocProvider(
         create: (context) =>
             FilteredTodoBloc(todoBloc: context.read<TodoBloc>())
-              ..add(FilteredTodoFilterChanged(TodoFilter.category))
-              ..add(FilteredTodoCategoryChanged(category)),
+              ..add(FilteredTodoFilterChanged(TodoFilter(
+                  filterByDate: true,
+                  filterByCategory: true,
+                  filterByDone: false,
+                  date: DateTime.now(),
+                  dateFilter: DateFilterType.onDate,
+                  category: category))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -1,16 +1,21 @@
 import 'package:bloc/bloc.dart';
+import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
 
 class SimpleBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
-    print(event);
+    if (!(bloc is FilteredTodoBloc)) {
+      print(event);
+    }
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    print(transition);
+    if (!(bloc is FilteredTodoBloc)) {
+      print(transition);
+    }
   }
 
   @override

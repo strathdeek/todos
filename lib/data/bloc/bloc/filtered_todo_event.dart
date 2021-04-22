@@ -13,20 +13,8 @@ class FilteredTodoFilterChanged extends FilteredTodoEvent {
   FilteredTodoFilterChanged(this.filter);
 }
 
-class FilteredTodoDateChanged extends FilteredTodoEvent {
-  final DateTime date;
-
-  FilteredTodoDateChanged(this.date);
-}
-
 class FilteredTodoTodosChanged extends FilteredTodoEvent {
   final List<Todo> todos;
 
   FilteredTodoTodosChanged(this.todos);
-}
-
-class FilteredTodoCategoryChanged extends FilteredTodoEvent {
-  final Category category;
-
-  FilteredTodoCategoryChanged(this.category);
 }

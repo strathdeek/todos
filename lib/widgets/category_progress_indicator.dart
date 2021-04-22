@@ -4,6 +4,7 @@ import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
 import 'package:todos/data/constants/enums.dart';
 import 'package:todos/data/models/category.dart';
+import 'package:todos/data/models/todo_filter.dart';
 
 class CategoryProgressIndicator extends StatelessWidget {
   final Color color;
@@ -20,8 +21,13 @@ class CategoryProgressIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => FilteredTodoBloc(todoBloc: context.read<TodoBloc>())
-        ..add(FilteredTodoFilterChanged(TodoFilter.completedCategory))
-        ..add(FilteredTodoCategoryChanged(category)),
+        ..add(FilteredTodoFilterChanged(TodoFilter(
+            filterByCategory: true,
+            filterByDate: true,
+            filterByDone: true,
+            category: category,
+            date: DateTime.now(),
+            dateFilter: DateFilterType.onDate))),
       child: Container(
         child: BlocBuilder<FilteredTodoBloc, FilteredTodoState>(
           builder: (context, state) {

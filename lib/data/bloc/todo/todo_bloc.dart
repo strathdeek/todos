@@ -26,8 +26,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       yield* _mapTodoDeletedToState(event);
     } else if (event is TodoUpdated) {
       yield* _mapTodoUpdatedToState(event);
-    } else if (event is TodoMarkedAsDone) {
-      yield* _mapTodoMarkedAsDoneToState(event);
+    } else if (event is TodoDoneToggled) {
+      yield* _mapTodoDoneToggledToState(event);
     }
   }
 
@@ -64,24 +64,29 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Stream<TodoState> _mapTodoUpdatedToState(TodoUpdated event) async* {
     try {
-      await todoRepository.updateTodo(event.todo);
-      var todos = List<Todo>.from(state.todos)
-          .map<Todo>((e) => e.id == event.todo.id ? event.todo : e)
+      var updatedTodo = event.todo.copyWith(
+          done: event.done,
+          category: event.category,
+          dueDate: event.dueDate,
+          title: event.title);
+      await todoRepository.updateTodo(updatedTodo);
+      var updatedTodos = state.todos
+          .map<Todo>((e) => e.id == updatedTodo.id ? updatedTodo : e)
           .toList();
-      yield TodoLoadSuccess(todos);
+      yield TodoLoadSuccess(updatedTodos);
     } catch (e) {
       yield TodoLoadFailed(error: 'error updating todo');
     }
   }
 
-  Stream<TodoState> _mapTodoMarkedAsDoneToState(TodoMarkedAsDone event) async* {
+  Stream<TodoState> _mapTodoDoneToggledToState(TodoDoneToggled event) async* {
     try {
-      event.todo.done = true;
-      await todoRepository.updateTodo(event.todo);
-      var todos = List<Todo>.from(state.todos)
-          .map<Todo>((e) => e.id == event.todo.id ? event.todo : e)
+      var updatedTodo = event.todo.copyWith(done: event.done);
+      await todoRepository.updateTodo(updatedTodo);
+      var updatedTodos = state.todos
+          .map<Todo>((e) => e.id == updatedTodo.id ? updatedTodo : e)
           .toList();
-      yield TodoLoadSuccess(todos);
+      yield TodoLoadSuccess(updatedTodos);
     } catch (e) {
       yield TodoLoadFailed(error: 'error marking todo as done');
     }
