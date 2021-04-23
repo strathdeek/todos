@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
+import 'package:todos/data/bloc/filtered_todo/filtered_todo_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
-import 'package:todos/data/constants/enums.dart';
 import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/todo_filter.dart';
 

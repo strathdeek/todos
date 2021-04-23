@@ -3,11 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
-import 'package:todos/data/constants/enums.dart';
-import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/data/models/todo_filter.dart';
-import 'package:todos/utils/extensions.dart';
 
 part 'filtered_todo_event.dart';
 part 'filtered_todo_state.dart';

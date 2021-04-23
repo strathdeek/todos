@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todos/data/models/category.dart';
 import 'package:todos/pages/add_todo_page.dart';
 import 'package:todos/pages/index.dart';
+import 'package:todos/pages/user_setup.dart';
 
 Route onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -21,6 +22,8 @@ Route onGenerateRoute(RouteSettings settings) {
     case '/addtodo':
       return _buildPageWithSlideTransition(
           () => AddTodoPage(settings.arguments as Category), settings);
+    case '/setup':
+      return MaterialPageRoute(builder: (_) => UserSetupPage());
     default:
       return MaterialPageRoute(builder: (_) => SplashPage());
   }
@@ -40,7 +43,6 @@ Route _buildPageWithSlideTransition<T>(
       var tween =
           Tween(begin: Offset(0, 1), end: Offset(0, 0)).chain(curveTween);
 
-      var offsetAnimation = animation.drive(tween);
       return SlideTransition(
         position: tween
             .animate(CurvedAnimation(parent: animation, curve: Curves.ease)),

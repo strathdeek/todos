@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
+import 'package:todos/data/bloc/filtered_todo/filtered_todo_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
 import 'package:todos/data/models/category.dart';
-import 'package:todos/data/models/index.dart';
 import 'package:todos/data/models/todo_filter.dart';
 import 'package:todos/widgets/category_icon.dart';
 import 'package:todos/widgets/category_sumary.dart';
-import 'package:todos/widgets/todo_list.dart';
 
 class CategoryDetailPage extends StatelessWidget {
   final Category category;

@@ -1,7 +1,6 @@
 import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/data/providers/todo_provider.dart';
-import 'package:todos/utils/extensions.dart';
 
 class TodoRepository {
   final TodoProvider _todoProvider;
@@ -10,24 +9,6 @@ class TodoRepository {
 
   Future<List<Todo>> getAllTodos() async {
     return await _todoProvider.getTodos();
-  }
-
-  Future<List<Todo>> getAllTodosForCategory(Category category) async {
-    var todos = await _todoProvider.getTodos();
-    return todos.where((element) => (element.category) == category).toList();
-  }
-
-  Future<List<Todo>> getAllTodosDueOn(DateTime date) async {
-    var todos = await _todoProvider.getTodos();
-    return todos.where((element) => element.dueDate.isSameDate(date)).toList();
-  }
-
-  Future<List<Todo>> getAllMissedTodos() async {
-    var todos = await _todoProvider.getTodos();
-    return todos
-        .where((element) => element.dueDate.isBefore(DateTime.now()))
-        .where((element) => !(element.done))
-        .toList();
   }
 
   Future<Todo> addTodo(

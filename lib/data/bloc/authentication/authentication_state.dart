@@ -11,11 +11,11 @@ class AuthenticationUninitialized extends AuthenticationState {}
 
 class AuthenticationAuthenticated extends AuthenticationState {
   final String token;
-  final User user;
-
-  AuthenticationAuthenticated(this.token, this.user);
+  final String userId;
+  final String email;
+  AuthenticationAuthenticated(this.token, this.userId, this.email);
   @override
-  List<Object> get props => [token, user];
+  List<Object> get props => [token, userId];
 }
 
 class AuthenticationUnauthenticated extends AuthenticationState {
@@ -26,5 +26,3 @@ class AuthenticationUnauthenticated extends AuthenticationState {
   @override
   List<Object> get props => [error];
 }
-
-class AuthenticationLoading extends AuthenticationState {}

@@ -6,8 +6,11 @@ import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
 import 'package:todos/data/bloc/bloc_observer.dart';
 import 'package:todos/data/bloc/register/register_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
+import 'package:todos/data/bloc/user/user_bloc.dart';
 import 'package:todos/data/providers/todo_provider.dart';
+import 'package:todos/data/providers/user_provider.dart';
 import 'package:todos/data/repositories/todo_repository.dart';
+import 'package:todos/data/repositories/user_repository.dart';
 import 'package:todos/pages/index.dart';
 import 'package:todos/pages/routes/router.dart';
 
@@ -22,25 +25,33 @@ void main() async {
   await FirebaseAuth.instance.useEmulator('http://localhost:9099');
   await initializeHiveDatabase();
   Bloc.observer = SimpleBlocObserver();
-  var _todoProvider = TodoProvider();
-  var _todoRepository = TodoRepository(_todoProvider);
-
   setupServiceLocater();
 
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider<AuthenticationBloc>(
-      create: (context) => AuthenticationBloc()..add(AppStarted()),
-    ),
-    BlocProvider<LoginBloc>(
-      create: (context) => LoginBloc(),
-    ),
-    BlocProvider<RegisterBloc>(
-      create: (context) => RegisterBloc(),
-    ),
-    BlocProvider<TodoBloc>(
-        create: (context) => TodoBloc(todoRepository: _todoRepository)
-          ..add(TodoLoadedSuccess())),
-  ], child: TodoApp()));
+  var _todoProvider = TodoProvider();
+  var _todoRepository = TodoRepository(_todoProvider);
+  var _userProvider = UserProvider();
+  var _userRepository = UserRepository(_userProvider);
+
+  runApp(MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          create: (context) => AuthenticationBloc(),
+        ),
+        BlocProvider<LoginBloc>(
+          create: (context) => LoginBloc(),
+        ),
+        BlocProvider<RegisterBloc>(
+          create: (context) => RegisterBloc(),
+        ),
+        BlocProvider<TodoBloc>(
+            create: (context) => TodoBloc(todoRepository: _todoRepository)
+              ..add(TodoLoadedSuccess())),
+      ],
+      child: BlocProvider(
+        create: (context) =>
+            UserBloc(context.read<AuthenticationBloc>(), _userRepository),
+        child: TodoApp(),
+      )));
 }
 
 class TodoApp extends StatelessWidget {
@@ -62,18 +73,17 @@ class TodoApp extends StatelessWidget {
       ),
       navigatorKey: _navigatorKey,
       builder: (context, child) {
-        return BlocListener<AuthenticationBloc, AuthenticationState>(
+        return BlocListener<UserBloc, UserState>(
           listener: (context, state) {
-            if (state is AuthenticationAuthenticated) {
+            if (state is UserLoadFail) {
+              _navigator.pushNamedAndRemoveUntil('/setup', (route) => false);
+            } else if (state is UserLoadSuccess) {
               _navigator.pushNamedAndRemoveUntil('/', (route) => false);
-            } else if (state is AuthenticationUnauthenticated) {
+            } else {
               _navigator.pushNamedAndRemoveUntil<void>(
                 '/login',
                 (route) => false,
               );
-            } else {
-              _navigator.pushAndRemoveUntil(
-                  SplashPage.route(), (route) => false);
             }
           },
           child: child,

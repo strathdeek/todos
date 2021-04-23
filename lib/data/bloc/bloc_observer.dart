@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
+import 'package:todos/data/bloc/filtered_todo/filtered_todo_bloc.dart';
 
 class SimpleBlocObserver extends BlocObserver {
   @override

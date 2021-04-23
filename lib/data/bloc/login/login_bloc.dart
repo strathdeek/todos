@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todos/data/exceptions/index.dart';
-import 'package:todos/data/repositories/user/user_repository.dart';
 import 'package:todos/data/services/authentication/index.dart';
 import 'package:todos/data/services/service_locater.dart';
 import 'package:todos/utils/authentication.dart';
@@ -22,8 +21,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   AuthenticationService get authenticationService =>
       getIt<AuthenticationService>();
-
-  UserRepository get userRepository => getIt<UserRepository>();
 
   @override
   Stream<LoginState> mapEventToState(

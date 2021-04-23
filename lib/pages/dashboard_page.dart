@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todos/data/bloc/authentication/authentication_bloc.dart';
-import 'package:todos/data/bloc/bloc/filtered_todo_bloc.dart';
+import 'package:todos/data/bloc/filtered_todo/filtered_todo_bloc.dart';
 import 'package:todos/data/bloc/todo/todo_bloc.dart';
+import 'package:todos/data/bloc/user/user_bloc.dart';
 import 'package:todos/data/models/category.dart';
 import 'package:todos/data/models/index.dart';
 import 'package:todos/data/models/todo_filter.dart';
@@ -34,9 +35,13 @@ class _DashboardPageState extends State<DashboardPage> {
           SizedBox(
             height: 20,
           ),
-          Text(
-            'Hello, ${user.name}.',
-            style: TextStyle(color: Colors.white, fontSize: 35),
+          BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              return Text(
+                'Hello, ${(state is UserLoadSuccess) ? state.user.name : 'Guest'}.',
+                style: TextStyle(color: Colors.white, fontSize: 35),
+              );
+            },
           ),
           SizedBox(
             height: 10,
@@ -70,9 +75,10 @@ class _DashboardPageState extends State<DashboardPage> {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
         if (!(state is AuthenticationAuthenticated)) {
-          return Scaffold(body: CircularProgressIndicator());
+          return Scaffold(appBar: AppBar(), body: CircularProgressIndicator());
         }
-        var user = (state).user;
+        var user = User(
+            'kevin', 'email@gmail.com', '12345'); //todo fix this with user bloc
         return Scaffold(
           body: AnimatedContainer(
             duration: Duration(milliseconds: 300),
