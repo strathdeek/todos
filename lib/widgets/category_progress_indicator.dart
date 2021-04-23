@@ -23,11 +23,10 @@ class CategoryProgressIndicator extends StatelessWidget {
       create: (context) => FilteredTodoBloc(todoBloc: context.read<TodoBloc>())
         ..add(FilteredTodoFilterChanged(TodoFilter(
             filterByCategory: true,
-            filterByDate: true,
+            filterByDate: false,
             filterByDone: true,
             category: category,
-            date: DateTime.now(),
-            dateFilter: DateFilterType.onDate))),
+            done: true))),
       child: Container(
         child: BlocBuilder<FilteredTodoBloc, FilteredTodoState>(
           builder: (context, state) {

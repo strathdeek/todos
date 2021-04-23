@@ -31,8 +31,8 @@ class TodoFilter extends Equatable {
       switch (dateFilter) {
         case DateFilterType.afterDate:
           filteredTodos = filteredTodos
-              .where(
-                  (element) => element.dueDate.isAfter(date ?? DateTime.now()))
+              .where((element) => element.dueDate
+                  .isAfter(date?.endOfDay() ?? DateTime.now().endOfDay()))
               .toList();
           break;
         case DateFilterType.onDate:
@@ -43,8 +43,8 @@ class TodoFilter extends Equatable {
           break;
         case DateFilterType.beforeDate:
           filteredTodos = filteredTodos
-              .where(
-                  (element) => element.dueDate.isBefore(date ?? DateTime.now()))
+              .where((element) => element.dueDate
+                  .isBefore(date?.startOfDay() ?? DateTime.now().startOfDay()))
               .toList();
           break;
         default:

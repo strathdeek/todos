@@ -19,7 +19,7 @@ class CategorySummary extends StatelessWidget {
         create: (context) =>
             FilteredTodoBloc(todoBloc: context.read<TodoBloc>())
               ..add(FilteredTodoFilterChanged(TodoFilter(
-                  filterByDate: true,
+                  filterByDate: false,
                   filterByCategory: true,
                   filterByDone: false,
                   date: DateTime.now(),
